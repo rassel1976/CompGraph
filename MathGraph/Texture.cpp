@@ -10,12 +10,12 @@ Texture::Texture(const GLchar* texrurePath) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	int width1, height1;
-	unsigned char* image = SOIL_load_image(texrurePath, &width1, &height1, 0, SOIL_LOAD_RGB);
+	int width1, height1, nrChannels;
+	unsigned char* data = stbi_load(texrurePath, &width1, &height1, &nrChannels, 0);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width1, height1, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width1, height1, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	SOIL_free_image_data(image);
+	stbi_image_free(data);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

@@ -24,10 +24,10 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="SimpleModel.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="SimpleModel.cpp">
+    <ClCompile Include="Camera.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -37,6 +37,12 @@
       <Filter>Исходные файлы</Filter>
     </None>
     <None Include="lamp.frag">
+      <Filter>Исходные файлы</Filter>
+    </None>
+    <None Include="skybox.ver">
+      <Filter>Исходные файлы</Filter>
+    </None>
+    <None Include="skybox.frag">
       <Filter>Исходные файлы</Filter>
     </None>
   </ItemGroup>
@@ -57,6 +63,9 @@
     </ClInclude>
     <ClInclude Include="SimpleModel.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

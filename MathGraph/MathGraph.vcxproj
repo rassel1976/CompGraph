@@ -78,7 +78,7 @@
     <Linkage-glew>static</Linkage-glew>
     <IncludePath>$(MSBuildProjectDirectory)\Libraries\glew-2.1.0\include;$(MSBuildProjectDirectory)\Libraries\simple-opengl-image-library-master\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(MSBuildProjectDirectory)\Libraries\simple-opengl-image-library-master\libs;$(MSBuildProjectDirectory)\Libraries\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
-    <SourcePath>$(MSBuildProjectDirectory);</SourcePath>
+    <SourcePath>$(VS_SourcePath);</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -154,6 +154,8 @@
     <None Include="lamp.frag" />
     <None Include="p1.frag" />
     <None Include="packages.config" />
+    <None Include="skybox.frag" />
+    <None Include="skybox.ver" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="p1.ver" />
@@ -162,6 +164,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleModel.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

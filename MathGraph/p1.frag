@@ -1,18 +1,27 @@
 #version 330 core
+
+struct Light {
+    vec3 pos;
+    vec3 color;
+
+    float constant;
+    float linear;
+    float quadratic;
+};
+
 out vec4 color;
 
 in vec3 ourColor;
 in vec3 Normal;
 in vec3 FragPos;
 in vec3 pos;
-//in vec2 TexCoord;
+in vec2 TexCoord;
 
-//uniform sampler2D ourTexture1;
+uniform sampler2D ourTexture1;
 //uniform sampler2D ourTexture2;
 
 uniform vec3 objectColor;
-uniform vec3 lightColor;
-uniform vec3 lightPos;
+uniform Light light;
 uniform vec3 viewPos;
 
 vec3 applyFog( in vec3  rgb,       // original color of the pixel
@@ -40,32 +49,40 @@ vec3 applyFog1( in vec3  rgb,      // original color of the pixel
     return mix( rgb, fogColor, fogAmount );
 }
 
-
 void main()
 {
     //color = mix(texture(ourTexture1, TexCoord), texture(ourTexture2, TexCoord), 0.2);
+
+    //Phong 
     float amb = 0.1f;
-    vec3 ambient = amb * lightColor;
+    vec3 ambient = amb * light.color;
 
     vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(lightPos - FragPos);
+    vec3 lightDir = normalize(light.pos - FragPos);
 
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
+    vec3 diffuse = diff * light.color;
 
     float specularStrength = 0.5f;
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = specularStrength * spec * lightColor;
+    vec3 specular = specularStrength * spec * light.color;
 
+    float distance = length(light.pos - FragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + 
+    		    light.quadratic * (distance * distance));
 
+    ambient  *= attenuation; 
+    diffuse  *= attenuation;
+    specular *= attenuation;
+    
+    vec3 result = (ambient + diffuse + specular) * vec3(texture(ourTexture1, TexCoord));
 
-    vec3 result = (ambient + diffuse + specular) * objectColor;
-
+    //Fog
     float dist = length(pos);
     vec3 posNorm = normalize(pos);
 
 
-    color = vec4(applyFog1(result, dist, posNorm, lightDir), 1.0f);
+    color = vec4(result, 1.0f);
 }
