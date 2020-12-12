@@ -152,8 +152,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="lamp.frag" />
+    <None Include="lamp.ver" />
     <None Include="p1.frag" />
     <None Include="packages.config" />
+    <None Include="shadow_map.frag" />
+    <None Include="shadow_map.geo" />
+    <None Include="shadow_map.ver" />
     <None Include="skybox.frag" />
     <None Include="skybox.ver" />
   </ItemGroup>
@@ -162,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="random.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleModel.h" />
     <ClInclude Include="stb_image.h" />
