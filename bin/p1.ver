@@ -1,0 +1,30 @@
+#version 330 core
+layout (location = 0) in vec3 position;
+layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 texCoord;
+
+out vec2 TexCoord;
+out vec3 Normal;
+out vec3 FragPos;
+out vec3 pos;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+uniform vec3 viewPos;
+
+uniform sampler2D ourTexture1;
+
+uniform bool reverse_normals;
+
+void main()
+{
+    gl_Position = projection * view * model * vec4(position, 1.0f);
+    FragPos = vec3(model * vec4(position, 1.0f));
+    if(reverse_normals) // a slight hack to make sure the outer large cube displays lighting from the 'inside' instead of the default 'outside'.
+        Normal = transpose(inverse(mat3(model))) * (-1.0 * normal);
+    else
+        Normal = transpose(inverse(mat3(model))) * normal;
+    pos = FragPos - viewPos;
+    TexCoord = texCoord;
+}
