@@ -24,7 +24,8 @@ vec3 applyFog( in vec3  rgb,       // original color of the pixel
 
 void main() {
     // Access the cube map texture
-    vec4 cubeMapColor = texture(CubeMapTex, ReflectDir);
+    //invert x and z of ReflectDir
+    vec4 cubeMapColor = texture(CubeMapTex, vec3(-ReflectDir.x, ReflectDir.y, -ReflectDir.z));
     vec4 resColor = vec4(1.0);
     float dist = length(pos);
     if( DrawSkyBox )
