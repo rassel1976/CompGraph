@@ -15,6 +15,7 @@ uniform vec3 viewPos;
 out vec3 LightDir;
 out vec2 TexCoord;
 out vec3 ViewDir;
+out vec3 pos;
 
 uniform mat4 View;
 uniform mat4 Model;
@@ -36,7 +37,7 @@ void main()
         tang.z, binormal.z, norm.z ) ;
 
     // Transform light direction and view direction to tangent space
-    vec3 pos = viewPos - VertexPosition;
+    pos = viewPos - VertexPosition;
     LightDir = normalize( toObjectLocal * (Light.Position - VertexPosition) );
 
     ViewDir = toObjectLocal * normalize(pos);

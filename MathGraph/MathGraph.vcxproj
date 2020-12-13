@@ -159,6 +159,10 @@
     <None Include="norm_map.ver" />
     <None Include="p1.frag" />
     <None Include="packages.config" />
+    <None Include="refract.ver" />
+    <None Include="reflect.frag" />
+    <None Include="reflect.ver" />
+    <None Include="refract.frag" />
     <None Include="shadow_map.frag" />
     <None Include="shadow_map.geo" />
     <None Include="shadow_map.ver" />

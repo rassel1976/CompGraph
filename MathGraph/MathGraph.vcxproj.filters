@@ -69,6 +69,18 @@
     <None Include="norm_map.frag">
       <Filter>Исходные файлы</Filter>
     </None>
+    <None Include="reflect.ver">
+      <Filter>Исходные файлы</Filter>
+    </None>
+    <None Include="reflect.frag">
+      <Filter>Исходные файлы</Filter>
+    </None>
+    <None Include="refract.frag">
+      <Filter>Исходные файлы</Filter>
+    </None>
+    <None Include="refract.ver">
+      <Filter>Исходные файлы</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="p1.ver">
