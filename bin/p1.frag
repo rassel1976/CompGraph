@@ -71,7 +71,7 @@ vec3 phongModel( vec3 normal, vec3 diffR ) {
     vec3 spec = vec3(0.0);
     if( sDotN > 0.0 )
         spec = light.Intensity * Material.Ks *
-               pow( max( dot(r,ViewDir), 0.0 ), Material.Shininess ) * diffR;
+               pow( max( dot(r,ViewDir), 0.0 ), Material.Shininess );
 
     float distance = length(light.pos - FragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + 
