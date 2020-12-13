@@ -144,15 +144,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BMPReader.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="MathGraph.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SimpleModel.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="VBOMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lamp.frag" />
     <None Include="lamp.ver" />
+    <None Include="norm_map.frag" />
+    <None Include="norm_map.ver" />
     <None Include="p1.frag" />
     <None Include="packages.config" />
     <None Include="shadow_map.frag" />
@@ -165,12 +169,14 @@
     <Text Include="p1.ver" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BMPReader.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="random.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SimpleModel.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="VBOMesh.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

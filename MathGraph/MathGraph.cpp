@@ -16,6 +16,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "random.h"
+#include "VBOMesh.h"
+#include "BMPReader.h"
+
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -80,9 +83,13 @@ int main()
 	Shader skyShader("./skybox.ver", "./skybox.frag");
 	Shader lightShader("./lamp.ver", "./lamp.frag");
 	Shader smapShader("./shadow_map.ver", "./shadow_map.frag", "./shadow_map.geo");
+	Shader normapShader("./norm_map.ver", "./norm_map.frag");
 
 	Texture tex1("textures/container.jpg");
 	Texture tex2("textures/awesomeface.png");
+	GLuint ogre_diff = BMPReader::loadTex("textures/diffuse.bmp");
+	GLuint ogre_norm = BMPReader::loadTex("textures/ogre_normalmap.bmp");
+
 
 	std::vector<std::string> faces
 	{
@@ -95,6 +102,8 @@ int main()
 	};
 	unsigned int cubemapTexture = loadCubemap(faces);
 
+	VBOMesh ogre = VBOMesh("./media/bs_ears.obj", false, true, true);
+
 	glm::mat4 projection(1);
 	projection = glm::perspective(glm::radians(45.0f), ((float)width/(float)height), 0.1f, 100.0f);
 
@@ -106,7 +115,7 @@ int main()
 	SimpleModel plane;
 	plane.initPlane();
 
-	glm::vec3 lightPos(1.0f, 5.0f, 0.0f);
+	glm::vec3 lightPos(1.0f, 3.0f, 3.0f);
 	glm::mat4 lModel(1);
 	lModel = glm::translate(lModel, lightPos);
 	lModel = glm::scale(lModel, glm::vec3(0.2f));
@@ -198,7 +207,7 @@ int main()
 		view = camera.GetViewMatrix();
 		glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)width / (GLfloat)height, 0.1f, 100.0f);
 
-
+		//Render Skybox
 		if (isSky) {
 			glDepthMask(GL_FALSE);
 			skyShader.use();
@@ -228,6 +237,10 @@ int main()
 		ourShader.setFloat("light.constant", 1.0f);
 		ourShader.setFloat("light.linear", 0.09f);
 		ourShader.setFloat("light.quadratic", 0.032f);
+		ourShader.setVec3("light.Intensity", vec3(0.9f, 0.9f, 0.9f));
+		ourShader.setVec3("Material.Ks", 0.2f, 0.2f, 0.2f);
+		ourShader.setVec3("Material.Ka", 0.1f, 0.1f, 0.1f);
+		ourShader.setFloat("Material.Shininess", 1.0f);
 		ourShader.setVec3("viewPos", camera.Position);
 		ourShader.setFloat("far_plane", far_plane);
 		ourShader.setBool("shadows", true);
@@ -254,6 +267,33 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 
+		//Draw normal maps
+
+		glm::mat4 ogre_model = glm::mat4(1.0f);
+		//ogre_model = glm::translate(ogre_model, glm::vec3(3.0, 0.0, 0.0));
+
+		normapShader.use();
+
+		normapShader.setVec3("Light.Position", lightPos);
+		normapShader.setVec3("Light.Intensity", vec3(0.9f, 0.9f, 0.9f));
+		normapShader.setVec3("Material.Ks", 0.2f, 0.2f, 0.2f);
+		normapShader.setVec3("Material.Ka", 0.1f, 0.1f, 0.1f);
+		normapShader.setFloat("Material.Shininess", 1.0f);
+		normapShader.setInt("ColorTex", 0);
+		normapShader.setInt("NormalMapTex", 1);
+		normapShader.setMat4("View", view);
+		normapShader.setMat4("Model", ogre_model);
+		normapShader.setMat4("Projection", projection);
+		normapShader.setMat3("NormalMatrix",
+			glm::mat3(vec3(ogre_model[0]), vec3(ogre_model[1]), vec3(ogre_model[2])));
+		normapShader.setVec3("viewPos", camera.Position);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, ogre_norm);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, ogre_diff);
+		ogre.render();
+
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
 	}
@@ -266,7 +306,7 @@ int main()
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-	std::cout << key << std::endl;
+	//std::cout << key << std::endl;
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 
@@ -274,7 +314,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		isSky = !isSky;
 
 	if (key == 70 && action == GLFW_PRESS)
-		fog = (fog + 1) % 3;
+		fog = (fog + 1) % 2;
 
 	if (key >= 0 && key < 1024)
 	{
@@ -371,6 +411,7 @@ void renderScene(const Shader& shader, GLint cubeVAO)
 	glEnable(GL_CULL_FACE);
 	// cubes
 	model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0, 0.0, -1.0));
 	model = glm::scale(model, glm::vec3(0.5f));
 	shader.setMat4("model", model);
 

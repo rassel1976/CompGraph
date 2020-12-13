@@ -3,7 +3,6 @@ layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 texCoord;
 
-out vec3 ourColor;
 out vec2 TexCoord;
 out vec3 Normal;
 out vec3 FragPos;
@@ -18,15 +17,6 @@ uniform sampler2D ourTexture1;
 
 uniform bool reverse_normals;
 
-vec3 applyVertFog( in vec3  rgb,       // original color of the pixel
-               in float distance ) // camera to point distance
-{
-    float b = 0.4;
-    float fogAmount = 1.0 - exp( -distance*b );
-    vec3  fogColor  = vec3(0.5,0.6,0.7);
-    return mix( rgb, fogColor, fogAmount );
-}
-
 void main()
 {
     gl_Position = projection * view * model * vec4(position, 1.0f);
@@ -36,6 +26,5 @@ void main()
     else
         Normal = transpose(inverse(mat3(model))) * normal;
     pos = FragPos - viewPos;
-    ourColor = applyVertFog(vec3(1.0), length(pos));
     TexCoord = texCoord;
 }

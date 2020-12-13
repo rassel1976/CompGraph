@@ -12,6 +12,8 @@ Texture::Texture(const GLchar* texrurePath) {
 
 	int width1, height1, nrChannels;
 	unsigned char* data = stbi_load(texrurePath, &width1, &height1, &nrChannels, 0);
+	if (!data)
+		std::cout << "Bad image" << std::endl;
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width1, height1, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
