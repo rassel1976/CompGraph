@@ -50,10 +50,29 @@ float ShadowCalculation(vec3 fragPos)
 {
     vec3 fragToLight = fragPos - light.pos;  
     float closestDepth = texture(shadowMap, fragToLight).r;
-    closestDepth *= far_plane;
+    //closestDepth *= far_plane;
     float currentDepth = length(fragToLight);
-    float bias = 0.05; // we use a much larger bias since depth is now in [near_plane, far_plane] range
-    float shadow = currentDepth -  bias > closestDepth ? 1.0 : 0.0;           
+    //float bias = 0.05;
+    //float shadow = currentDepth -  bias > closestDepth ? 1.0 : 0.0;    
+    
+    float shadow  = 0.0;
+    float bias    = 0.05; 
+    float samples = 4.0;
+    float offset  = 0.1;
+    for(float x = -offset; x < offset; x += offset / (samples * 0.5))
+    {
+        for(float y = -offset; y < offset; y += offset / (samples * 0.5))
+        {
+            for(float z = -offset; z < offset; z += offset / (samples * 0.5))
+            {
+                float closestDepth = texture(shadowMap, fragToLight + vec3(x, y, z)).r; 
+                closestDepth *= far_plane;
+                if(currentDepth - bias > closestDepth)
+                    shadow += 1.0;
+            }
+        }
+    }
+    shadow /= (samples * samples * samples);
         
     return shadow;
 }
@@ -71,7 +90,7 @@ vec3 phongModel( vec3 normal, vec3 diffR ) {
     vec3 spec = vec3(0.0);
     if( sDotN > 0.0 )
         spec = light.Intensity * Material.Ks *
-               pow( max( dot(r,ViewDir), 0.0 ), Material.Shininess );
+               pow( max( dot(r,ViewDir), 0.0 ), Material.Shininess ) * diffR;
 
     float distance = length(light.pos - FragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + 
